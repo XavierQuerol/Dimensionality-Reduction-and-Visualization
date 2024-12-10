@@ -1,7 +1,15 @@
 from scipy.io.arff import loadarff
 import pandas as pd
 
-from utils import drop_rows_sick, drop_columns, min_max_scaler, one_hot_encoding, label_encoder, binary_encoding, fill_nans
+from code.utils import drop_rows_sick, drop_columns, min_max_scaler, one_hot_encoding, label_encoder, binary_encoding, fill_nans
+
+def get_dataset(dataset):
+    if dataset == "sick":
+        return preprocess_sick()
+    elif dataset == "vowel":
+        return preprocess_vowel()
+    else:
+        raise ValueError("This dataset is not supported")
 
 def preprocess_sick():
     """
@@ -9,7 +17,7 @@ def preprocess_sick():
     :return: dataframe
     """
     # Load arff file
-    df_sick, meta_train = loadarff(f'../datasets/sick.arff')
+    df_sick, meta_train = loadarff(f'datasets/sick.arff')
 
     # Define datasets
     df_sick = pd.DataFrame(df_sick)
@@ -38,7 +46,7 @@ def preprocess_sick():
 
     df_sick = df_sick[[col for col in df_sick if col != 'sick'] + ['sick']]
 
-    df_sick.to_csv(f'../datasets_processed/sick.csv', index=False)
+    df_sick.to_csv(f'datasets_processed/sick.csv', index=False)
 
     return df_sick.iloc[:,:-1], df_sick.iloc[:,-1]
 
