@@ -102,3 +102,21 @@ class PCA:
         self.remaining_components = self.components[:, :n_components]
 
         return self.project(X)
+
+    def reconstruct(self, x_projected):
+        """
+        Reconstruct the original dataset from the projected data.
+
+        Parameters:
+        X_projected (numpy.ndarray): The data projected onto the principal components (shape: [n_samples, n_components]).
+
+        Returns:
+        numpy.ndarray: Reconstructed dataset with shape (n_samples, n_features).
+        """
+        # Multiply the projected data by the principal components
+        X_reconstructed = np.dot(x_projected, self.remaining_components.T)
+
+        # Add back the mean
+        X_reconstructed += self.mean.values
+
+        return X_reconstructed

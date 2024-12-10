@@ -36,15 +36,14 @@ def part_1(dataset):
     plt.title(f'Dataset {dataset} only representing the 3 components with more correlation with the target')
     plt.show()
 
-    # Step 3 & 4 & 5 & 6 & 7 & 9
+    # Step 3 & 4 & 5 & 6 & 7
     pca = PCA(verbose=True)
-    X_transformed = pca.reduce_dim(ds, threshold=0.90, n_components=3)
+    X_transformed = pca.reduce_dim(ds, n_components=3)
 
     # Step 8
     # Create a scatter plot
     plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(X_transformed[:, 0], X_transformed[:, 1], c=X_transformed[:, 2], cmap='viridis',
-                          alpha=0.7)  # `viridis` is a color map, change as needed
+    scatter = plt.scatter(X_transformed[:, 0], X_transformed[:, 1], c=X_transformed[:, 2], cmap='viridis',alpha=0.7)  # `viridis` is a color map, change as needed
 
     # Add a color bar to show the gradient
     plt.colorbar(scatter, label='Third Dimension (Color Gradient)')
@@ -52,6 +51,17 @@ def part_1(dataset):
     plt.xlabel('First Component (X)')
     plt.ylabel('Second Component (Y)')
     plt.title(f'Dataset {dataset} after applying PCA and leaving 3 principal components')
+    plt.show()
+
+    # Step 9
+    X_reconstructed = pca.reconstruct(X_transformed)
+
+    plt.figure(figsize=(8, 6))
+    scatter = plt.scatter(X_reconstructed[top_features[0]], X_reconstructed[top_features[1]], c=X_reconstructed[top_features[2]], cmap='viridis', alpha=0.7)
+    plt.colorbar(scatter, label=f'{top_features[2]}')
+    plt.xlabel(top_features[0])
+    plt.ylabel(top_features[1])
+    plt.title(f'Dataset {dataset} only representing the 3 components with more correlation with the target')
     plt.show()
 
 
