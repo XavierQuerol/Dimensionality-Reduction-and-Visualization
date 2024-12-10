@@ -81,13 +81,13 @@ class PCA:
         x_centered = X - self.mean
         return np.dot(x_centered, self.remaining_components)
 
-    def reduce_dim(self, X, variability_threshold=0.95, n_components=None):
+    def reduce_dim(self, X, threshold=0.95, n_components=None):
         """
         Fits the dataset and returns its projected version.
 
         Parameters:
         X (numpy.ndarray): Dataset with shape (n_samples, n_features).
-        variability_threshold (float): Threshold for determining which components are variability. If n_components is defined, it will be used. Otherwise it will use variability_threshold.
+        threshold (float): Threshold for determining which components are variability. If n_components is defined, it will be used. Otherwise it will use variability_threshold.
         n_components (int): Number of principal components to keep.
 
         Returns:
@@ -97,7 +97,7 @@ class PCA:
 
         if n_components is None:
             cumulative_variance_ratio = np.cumsum(self.explained_variance)
-            n_components = np.searchsorted(cumulative_variance_ratio, variability_threshold) + 1
+            n_components = np.searchsorted(cumulative_variance_ratio, threshold) + 1
 
         self.remaining_components = self.components[:, :n_components]
 

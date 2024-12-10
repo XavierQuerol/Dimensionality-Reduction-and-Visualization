@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 
 from code.preprocessing import get_dataset
@@ -39,7 +38,7 @@ def part_1(dataset):
 
     # Step 3 & 4 & 5 & 6 & 7 & 9
     pca = PCA(verbose=True)
-    X_transformed = pca.reduce_dim(ds, variability_threshold=0.90, n_components=3)
+    X_transformed = pca.reduce_dim(ds, threshold=0.90, n_components=3)
 
     # Step 8
     # Create a scatter plot
