@@ -24,12 +24,19 @@ def part_1(dataset):
 
     # Step 2
     correlation_with_target = ds.corr()["target"]  # Based on their correlation with the target
-    top_features = correlation_with_target.abs().sort_values(ascending=False).iloc[1:4]
-    top_features = top_features.index.tolist()
+    top_features = correlation_with_target.abs().sort_values(ascending=False).iloc[1:4].index.tolist()
+
     ds = ds.drop('target', axis=1)
+    feature_indices = [ds.columns.get_loc(feature) for feature in top_features]  # Get indices of the features
 
     plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(ds[top_features[0]], ds[top_features[1]], c=ds[top_features[2]], cmap='viridis', alpha=0.7)
+    scatter = plt.scatter(
+        ds.iloc[:, feature_indices[0]],  # Access by column index
+        ds.iloc[:, feature_indices[1]],  # Access by column index
+        c=ds.iloc[:, feature_indices[2]],  # Access by column index
+        cmap='viridis',
+        alpha=0.7
+    )
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
@@ -57,7 +64,14 @@ def part_1(dataset):
     X_reconstructed = pca.reconstruct(X_transformed)
 
     plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(X_reconstructed[top_features[0]], X_reconstructed[top_features[1]], c=X_reconstructed[top_features[2]], cmap='viridis', alpha=0.7)
+
+    scatter = plt.scatter(
+        X_reconstructed[:, feature_indices[0]],  # Access by column index
+        X_reconstructed[:, feature_indices[1]],  # Access by column index
+        c=X_reconstructed[:, feature_indices[2]],  # Access by column index
+        cmap='viridis',
+        alpha=0.7
+    )
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
