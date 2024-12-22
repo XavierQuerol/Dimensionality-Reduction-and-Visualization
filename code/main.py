@@ -55,8 +55,8 @@ def part_1(dataset):
 
     plt.colorbar(scatter, label='Third Dimension (Color Gradient)')
 
-    plt.xlabel('First Component (X)')
-    plt.ylabel('Second Component (Y)')
+    plt.xlabel('First Principal Component')
+    plt.ylabel('Second Principal Component')
     plt.title(f'STEP 8: Dataset {dataset} after applying PCA and leaving 3 principal components')
     plt.show()
 
@@ -100,8 +100,8 @@ def sklearn_PCA(dataset):
     # Add a color bar to show the gradient
     plt.colorbar(scatter, label='Third Dimension (Color Gradient)')
 
-    plt.xlabel('First Component (X)')
-    plt.ylabel('Second Component (Y)')
+    plt.xlabel('First Principal Component')
+    plt.ylabel('Second Principal Component')
     plt.title(f'Dataset {dataset} after applying PCA and leaving 3 principal components')
     plt.show()
 
@@ -150,9 +150,9 @@ def sklearn_incremental_PCA(dataset):
     # Step 4: Scatter plot of PCA-transformed components
     plt.figure(figsize=(8, 6))
     scatter = plt.scatter(
-        X_transformed[:, 0],  # First principal component
-        X_transformed[:, 1],  # Second principal component
-        c=X_transformed[:, 2],  # Third principal component (as color gradient)
+        X_transformed[:, 0],
+        X_transformed[:, 1],
+        c=X_transformed[:, 2],
         cmap='viridis',
         alpha=0.7
     )
