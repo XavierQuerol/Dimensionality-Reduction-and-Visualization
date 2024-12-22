@@ -20,15 +20,14 @@ def load_ds(name):
 
 def part_1(dataset):
     # Step 1
-    x, y = get_dataset(dataset)
+    x, _ = get_dataset(dataset)
     ds = x.copy()
-    ds["target"] = y
 
+    print(ds)
     # Step 2
-    correlation_with_target = ds.corr()["target"]  # Based on their correlation with the target
-    top_features = correlation_with_target.abs().sort_values(ascending=False).iloc[1:4].index.tolist()
+    variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
+    top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
 
-    ds = ds.drop('target', axis=1)
     feature_indices = [ds.columns.get_loc(feature) for feature in top_features]  # Get indices of the features
 
     plt.figure(figsize=(8, 6))
@@ -42,7 +41,7 @@ def part_1(dataset):
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more correlation with the target')
+    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
     plt.show()
 
     # Step 3 & 4 & 5 & 6 & 7
@@ -77,21 +76,18 @@ def part_1(dataset):
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more correlation with the target')
+    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
     plt.show()
 
 def sklearn_PCA(dataset):
-    from sklearn import decomposition
     # Step 1
-    x, y = get_dataset(dataset)
+    x, _ = get_dataset(dataset)
     ds = x.copy()
-    ds["target"] = y
 
     # Step 2
-    correlation_with_target = ds.corr()["target"]  # Based on their correlation with the target
-    top_features = correlation_with_target.abs().sort_values(ascending=False).iloc[1:4].index.tolist()
+    variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
+    top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
 
-    ds = ds.drop('target', axis=1)
     feature_indices = [ds.columns.get_loc(feature) for feature in top_features]  # Get indices of the features
 
     plt.figure(figsize=(8, 6))
@@ -105,7 +101,7 @@ def sklearn_PCA(dataset):
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more correlation with the target')
+    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
     plt.show()
 
     # Step 3 & 4 & 5 & 6 & 7
@@ -141,20 +137,18 @@ def sklearn_PCA(dataset):
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more correlation with the target')
+    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
     plt.show()
 
 def sklearn_incremental_PCA(dataset):
-    x, y = get_dataset(dataset)
+    x, _ = get_dataset(dataset)
     ds = x.copy()
-    ds["target"] = y
 
-    # Step 2: Select top features based on correlation with the target
-    correlation_with_target = ds.corr()["target"]  # Correlation with target
-    top_features = correlation_with_target.abs().sort_values(ascending=False).iloc[1:4].index.tolist()
+    # Step 2: Select top features based on variance
+    variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
+    top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
 
     # Extract feature indices for later use
-    ds = ds.drop('target', axis=1)
     feature_indices = [ds.columns.get_loc(feature) for feature in top_features]
 
     # Step 3: Apply Incremental PCA for dimensionality reduction
