@@ -4,9 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from code.preprocessing import get_dataset
-from code.pca import PCA
+from code.pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
+from code.pca import customPCA
+
 from sklearn import decomposition
-from utils import get_user_choice
+from code.utils import get_user_choice
 
 
 def load_ds(name):
@@ -18,6 +20,16 @@ def load_ds(name):
     # We remove the class of the dataset as we will not be using it
     return df.iloc[:,:-1], df.iloc[:,-1]
 
+def compare_pca_models(X, n_components=3, batch_size=10):
+    custompca_results = customPCA_analysis(X, n_components=n_components)
+    pca_results = pca_analysis(X, n_components=n_components)
+    ipca_results = incremental_pca_analysis(X, n_components=n_components, batch_size=batch_size)
+
+    # Concatenate the results into one DataFrame
+    comparison_df = pd.concat([custompca_results, pca_results, ipca_results], ignore_index=True)
+
+    return comparison_df
+
 def part_1(dataset):
     # Step 1
     print("STEP 1: DONE")
@@ -27,8 +39,15 @@ def part_1(dataset):
     # Step 2
     variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
     top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
-
     feature_indices = [ds.columns.get_loc(feature) for feature in top_features]  # Get indices of the features
+
+    total_variance = variances.sum()
+    print(f"Total Variance: {total_variance:.2f}")
+    for feature in top_features:
+        explained_variance = variances[feature]
+        percentage_explained = (explained_variance / total_variance) * 100
+        print(f"Feature: {feature} - Variance: {explained_variance:.2f} - "
+              f"Percentage of Total Variance Explained: {percentage_explained:.2f}%")
 
     plt.figure(figsize=(8, 6))
     scatter = plt.scatter(
@@ -45,7 +64,7 @@ def part_1(dataset):
     plt.show()
 
     # Step 3 & 4 & 5 & 6 & 7
-    pca = PCA(verbose=True)
+    pca = customPCA(verbose=True)
     X_transformed = pca.reduce_dim(ds, n_components=3)
     print("STEP 7: DONE")
 

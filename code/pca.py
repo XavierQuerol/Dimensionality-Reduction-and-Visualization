@@ -1,6 +1,6 @@
 import numpy as np
 
-class PCA:
+class customPCA:
     def __init__(self, verbose=False):
         """
         Constructor
