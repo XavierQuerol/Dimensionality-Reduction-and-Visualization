@@ -20,10 +20,10 @@ def load_ds(name):
 
 def part_1(dataset):
     # Step 1
+    print("STEP 1: DONE")
     x, _ = get_dataset(dataset)
     ds = x.copy()
 
-    print(ds)
     # Step 2
     variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
     top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
@@ -32,33 +32,32 @@ def part_1(dataset):
 
     plt.figure(figsize=(8, 6))
     scatter = plt.scatter(
-        ds.iloc[:, feature_indices[0]],  # Access by column index
-        ds.iloc[:, feature_indices[1]],  # Access by column index
-        c=ds.iloc[:, feature_indices[2]],  # Access by column index
+        ds.iloc[:, feature_indices[0]],
+        ds.iloc[:, feature_indices[1]],
+        c=ds.iloc[:, feature_indices[2]],
         cmap='viridis',
         alpha=0.7
     )
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
+    plt.title(f'STEP 2: Dataset {dataset} only representing 3 features with more variance')
     plt.show()
 
     # Step 3 & 4 & 5 & 6 & 7
     pca = PCA(verbose=True)
     X_transformed = pca.reduce_dim(ds, n_components=3)
+    print("STEP 7: DONE")
 
     # Step 8
-    # Create a scatter plot
     plt.figure(figsize=(8, 6))
     scatter = plt.scatter(X_transformed[:, 0], X_transformed[:, 1], c=X_transformed[:, 2], cmap='viridis',alpha=0.7)  # `viridis` is a color map, change as needed
 
-    # Add a color bar to show the gradient
     plt.colorbar(scatter, label='Third Dimension (Color Gradient)')
 
     plt.xlabel('First Component (X)')
     plt.ylabel('Second Component (Y)')
-    plt.title(f'Dataset {dataset} after applying PCA and leaving 3 principal components')
+    plt.title(f'STEP 8: Dataset {dataset} after applying PCA and leaving 3 principal components')
     plt.show()
 
     # Step 9
@@ -67,16 +66,16 @@ def part_1(dataset):
     plt.figure(figsize=(8, 6))
 
     scatter = plt.scatter(
-        X_reconstructed[:, feature_indices[0]],  # Access by column index
-        X_reconstructed[:, feature_indices[1]],  # Access by column index
-        c=X_reconstructed[:, feature_indices[2]],  # Access by column index
+        X_reconstructed[:, feature_indices[0]],
+        X_reconstructed[:, feature_indices[1]],
+        c=X_reconstructed[:, feature_indices[2]],
         cmap='viridis',
         alpha=0.7
     )
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
+    plt.title(f'STEP 9: Dataset {dataset} reconstructed representing the 3 components with more variance')
     plt.show()
 
 def sklearn_PCA(dataset):
@@ -84,25 +83,9 @@ def sklearn_PCA(dataset):
     x, _ = get_dataset(dataset)
     ds = x.copy()
 
-    # Step 2
     variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
     top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
-
     feature_indices = [ds.columns.get_loc(feature) for feature in top_features]  # Get indices of the features
-
-    plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(
-        ds.iloc[:, feature_indices[0]],  # Access by column index
-        ds.iloc[:, feature_indices[1]],  # Access by column index
-        c=ds.iloc[:, feature_indices[2]],  # Access by column index
-        cmap='viridis',
-        alpha=0.7
-    )
-    plt.colorbar(scatter, label=f'{top_features[2]}')
-    plt.xlabel(top_features[0])
-    plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
-    plt.show()
 
     # Step 3 & 4 & 5 & 6 & 7
     pca = decomposition.PCA(n_components=3)  # Reduce to 3 components
@@ -112,7 +95,7 @@ def sklearn_PCA(dataset):
     # Create a scatter plot
     plt.figure(figsize=(8, 6))
     scatter = plt.scatter(X_transformed[:, 0], X_transformed[:, 1], c=X_transformed[:, 2], cmap='viridis',
-                          alpha=0.7)  # `viridis` is a color map, change as needed
+                          alpha=0.7)
 
     # Add a color bar to show the gradient
     plt.colorbar(scatter, label='Third Dimension (Color Gradient)')
@@ -128,32 +111,29 @@ def sklearn_PCA(dataset):
     plt.figure(figsize=(8, 6))
 
     scatter = plt.scatter(
-        X_reconstructed[:, feature_indices[0]],  # Access by column index
-        X_reconstructed[:, feature_indices[1]],  # Access by column index
-        c=X_reconstructed[:, feature_indices[2]],  # Access by column index
+        X_reconstructed[:, feature_indices[0]],
+        X_reconstructed[:, feature_indices[1]],
+        c=X_reconstructed[:, feature_indices[2]],
         cmap='viridis',
         alpha=0.7
     )
     plt.colorbar(scatter, label=f'{top_features[2]}')
     plt.xlabel(top_features[0])
     plt.ylabel(top_features[1])
-    plt.title(f'Dataset {dataset} only representing the 3 components with more variance')
+    plt.title(f'Dataset {dataset} reconstructed representing the 3 components with more variance')
     plt.show()
 
 def sklearn_incremental_PCA(dataset):
     x, _ = get_dataset(dataset)
     ds = x.copy()
 
-    # Step 2: Select top features based on variance
     variances = ds.apply(lambda col: np.var(col, ddof=1))  # ddof=1 for sample variance instead of population variance
     top_features = variances.sort_values(ascending=False).iloc[:3].index.tolist()
-
-    # Extract feature indices for later use
     feature_indices = [ds.columns.get_loc(feature) for feature in top_features]
 
-    # Step 3: Apply Incremental PCA for dimensionality reduction
+    # Incremental PCA
     # Define mini-batches
-    batch_size = 100  # Set a batch size suitable for your system's memory
+    batch_size = 100
     incremental_pca = decomposition.IncrementalPCA(n_components=3)
 
     # Perform partial fit on mini-batches
@@ -191,9 +171,9 @@ def sklearn_incremental_PCA(dataset):
     # Step 6: Visualize reconstructed features
     plt.figure(figsize=(8, 6))
     scatter = plt.scatter(
-        X_reconstructed[:, feature_indices[0]],  # Reconstructed first feature
-        X_reconstructed[:, feature_indices[1]],  # Reconstructed second feature
-        c=X_reconstructed[:, feature_indices[2]],  # Reconstructed third feature (as color gradient)
+        X_reconstructed[:, feature_indices[0]],
+        X_reconstructed[:, feature_indices[1]],
+        c=X_reconstructed[:, feature_indices[2]],
         cmap='viridis',
         alpha=0.7
     )

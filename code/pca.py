@@ -37,6 +37,8 @@ class PCA:
         X (numpy.ndarray): Dataset with shape (n_samples, n_features).
         """
         # 1. Center dataset removing the mean
+        if self.verbose:
+            print("STEP 3: DONE")
         self.mean = np.mean(X, axis=0)
         x_centered = X - self.mean
 
@@ -62,14 +64,14 @@ class PCA:
         eigenvalues = eigenvalues[sorted_idx]
         eigenvectors = eigenvectors[:, sorted_idx]
 
-        if self.verbose: # STEP 6
-            print("STEP 6: WRITE SORTED EIGENVECTORS")
-            self.display_eigenvectors()
-
         self.eigenvalues = eigenvalues
         self.components = eigenvectors
         self.remaining_components = eigenvectors
         self.compute_explained_variance()
+
+        if self.verbose: # STEP 6
+            print("STEP 6: WRITE SORTED EIGENVECTORS")
+            self.display_eigenvectors()
 
     def project(self, X):
         """
