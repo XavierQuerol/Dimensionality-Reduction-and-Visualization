@@ -10,6 +10,11 @@ from code.pca import customPCA
 from sklearn import decomposition
 from code.utils import get_user_choice
 
+from sklearn.decomposition import KernelPCA
+from sklearn.cluster import OPTICS
+from global_kmeans import run_global_kmeans
+from sklearn.preprocessing import MinMaxScaler
+
 
 def load_ds(name):
 
