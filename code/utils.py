@@ -218,3 +218,6 @@ def reduce_and_plot_with_pca(data, labels=None, n_components=2):
     plt.grid(True) if n_components == 2 else None
     plt.show()
 
+def compute_final_clusters(data, labels, centers):
+    clusters = {i: {'points': data[labels==i], 'center': centers[i]} for i in range(len(centers))}
+    return clusters
