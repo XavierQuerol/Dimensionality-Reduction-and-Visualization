@@ -2,16 +2,13 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.decomposition import KernelPCA
-from sklearn.cluster import OPTICS
-from sklearn.preprocessing import MinMaxScaler
-from sklearn import decomposition
 
 from code.preprocessing import get_dataset
-from code.pca import PCA
-from utils import get_user_choice
-from global_kmeans import run_global_kmeans
+from code.pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
+from code.pca import customPCA
 
+from sklearn import decomposition
+from code.utils import get_user_choice
 
 
 def load_ds(name):
@@ -213,39 +210,6 @@ def sklearn_incremental_PCA(dataset):
     plt.ylabel(top_features[1])
     plt.title(f'Reconstructed Dataset {dataset} using Incremental PCA')
     plt.show()
-
-def kernel_pca_clustering(dataset, kernel='linear', n_components=2, max_clusters_gkmeans=12, min_samples_optics=15):
-      """
-      Performs Kernel PCA, Global K-means, and OPTICS clustering.
-
-      Args:
-        dataset: The input dataset.
-        kernel: The kernel to use for Kernel PCA (default: 'linear').
-        n_components: The number of components to keep in Kernel PCA (default: 3).
-        max_clusters_gkmeans: Maximum number of clusters for Global K-means.
-        min_samples_optics: Minimum samples for OPTICS clustering.
-
-      Returns:
-        A tuple containing:
-          - The dataset transformed by Kernel PCA.
-          - Cluster labels from Global K-means.
-          - Cluster labels from OPTICS.
-      """
-
-      # 1. Kernel PCA
-      kpca = KernelPCA(kernel=kernel, n_components=n_components)
-      dataset_kpca = kpca.fit_transform(dataset)
-      scaler = MinMaxScaler()
-      dataset_kpca_normalized = scaler.fit_transform(dataset_kpca)
-
-      # 2. Global K-means
-      clusters_gkmeans, labels_gkmeans = run_global_kmeans(dataset_kpca_normalized, max_clusters=max_clusters_gkmeans)
-
-      # 3. OPTICS
-      optics = OPTICS(min_samples=min_samples_optics)
-      labels_optics = optics.fit_predict(dataset_kpca_normalized)
-
-      return dataset_kpca, labels_gkmeans, labels_optics
 
 def  main():
     while True:
