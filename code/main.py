@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 from code.preprocessing import get_dataset
 from code.pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
 from code.pca import customPCA
+from code.global_kmeans import run_global_kmeans
+from code.utils import get_user_choice
 
 from sklearn import decomposition
-from code.utils import get_user_choice
 
 from sklearn.decomposition import KernelPCA
 from sklearn.cluster import OPTICS
-from global_kmeans import run_global_kmeans
 from sklearn.preprocessing import MinMaxScaler
 
 
