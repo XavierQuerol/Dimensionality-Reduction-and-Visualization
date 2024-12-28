@@ -122,3 +122,16 @@ class customPCA:
         X_reconstructed += self.mean.values
 
         return X_reconstructed
+
+    def reconstruction_error(self, X):
+
+        # Obtener los datos proyectados en los componentes principales
+        X_projected = self.project(X)
+
+        # Reconstruir los datos
+        X_reconstructed = self.reconstruct(X_projected)
+
+        # Calcular la diferencia entre los datos originales y los reconstruidos
+        error = np.linalg.norm(X - X_reconstructed)
+
+        return error
