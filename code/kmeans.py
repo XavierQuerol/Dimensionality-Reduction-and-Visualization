@@ -1,6 +1,6 @@
 import numpy as np
-from code.utils import compute_final_clusters
-from code.metrics import get_metrics_general
+from utils import compute_final_clusters
+from metrics import get_metrics_general
 import pandas as pd
 import time
 
