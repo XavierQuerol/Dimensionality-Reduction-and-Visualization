@@ -1,7 +1,7 @@
 from scipy.io.arff import loadarff
 import pandas as pd
 
-from code.utils import drop_rows_sick, drop_columns, min_max_scaler, one_hot_encoding, label_encoder, binary_encoding, fill_nans
+from utils import drop_rows_sick, drop_columns, min_max_scaler, one_hot_encoding, label_encoder, binary_encoding, fill_nans
 
 def get_dataset(dataset):
     if dataset == "sick":
