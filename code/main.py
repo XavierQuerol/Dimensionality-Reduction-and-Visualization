@@ -8,6 +8,7 @@ from code.pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_
 from code.pca import customPCA
 from code.global_kmeans import run_global_kmeans
 from code.utils import get_user_choice
+from code.clustering import pca_cluster, kernel_cluster
 
 from sklearn import decomposition
 from tqdm import tqdm
@@ -278,7 +279,7 @@ def kernel_pca_clustering(dataset, kernel='linear', n_components=2, max_clusters
       return dataset_kpca, labels_gkmeans, labels_optics
 def  main():
     while True:
-        function = get_user_choice("What do you want to do?", ["Compare PCA models explainability", "Visualize individual datasets using PCA"])
+        function = get_user_choice("What do you want to do?", ["Compare PCA models explainability", "Visualize individual datasets using PCA", "Clustering the reduced datasets"])
         dataset = get_user_choice("Which datset would you like to visualize?",["sick","vowel"])
 
         if function == "Visualize individual datasets using PCA":
@@ -291,8 +292,23 @@ def  main():
                 sklearn_incremental_PCA(dataset)
         elif function == "Compare PCA models explainability":
             plot_models(dataset)
+        elif function == "Clustering the reduced datasets":
+            x, y = get_dataset(dataset)
+            if dataset == "vowel": n_components = 21
+            elif dataset == 'sick': n_components = 15
+
+            technique = get_user_choice("Which dimensionality reduction technique would you like to use?",["PCA","Kernel PCA"])
+            method = get_user_choice("Which clustering method would you like to use?",["G-Means","Optics"])
+
+            if technique == "PCA":
+                pca_cluster(x, y, component= n_components, method=method, max_clusters_gkmeans=12,  optics_metric='manhattan', optics_algorithm='kd_tree')
+            elif technique == "Kernel PCA":
+                kernel_cluster(x, y, component= n_components, method=method, max_clusters_gkmeans=12, optics_metric='minkowski',
+                               optics_algorithm='ball_tree')
+
         x = get_user_choice("Do you want to exit?", ["y", "n"])
         if x == "y":
             exit()
+
 if __name__ == "__main__":
     main()
