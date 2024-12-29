@@ -3,12 +3,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from code.preprocessing import get_dataset
-from code.pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
-from code.pca import customPCA
-from code.global_kmeans import run_global_kmeans
-from code.utils import get_user_choice
-from code.clustering import pca_cluster, kernel_cluster
+from preprocessing import get_dataset
+from pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
+from pca import customPCA
+from global_kmeans import run_global_kmeans
+from utils import get_user_choice
+from clustering import pca_cluster, kernel_cluster
 
 from sklearn import decomposition
 from tqdm import tqdm

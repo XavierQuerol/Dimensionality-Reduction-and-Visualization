@@ -3,10 +3,10 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 
-from code.pca import customPCA
-from code.optics import apply_optics
-from code.metrics import get_metrics_general
-from code.global_fastkmeans import run_global_kmeans
+from pca import customPCA
+from optics import apply_optics
+from metrics import get_metrics_general
+from global_fastkmeans import run_global_kmeans
 from sklearn.decomposition import KernelPCA
 
 def pca_cluster(data, Y, component, method='G-Means', max_clusters_gkmeans=12, optics_metric='euclidean', optics_algorithm='auto'):

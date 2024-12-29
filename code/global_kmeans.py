@@ -1,5 +1,3 @@
-
-
 import numpy as np
 from kmeans import CustomKMeans
 from utils import compute_final_clusters
