@@ -10,6 +10,7 @@ from code.global_kmeans import run_global_kmeans
 from code.utils import get_user_choice
 
 from sklearn import decomposition
+from tqdm import tqdm
 
 from sklearn.decomposition import KernelPCA
 from sklearn.cluster import OPTICS
@@ -22,6 +23,65 @@ def load_ds(name):
     df = pd.read_csv(file)
     # We remove the class of the dataset as we will not be using it
     return df.iloc[:,:-1], df.iloc[:,-1]
+
+def create_pca_matrix(ds):
+    results = []
+
+    for comp in tqdm(range(1, ds.shape[1]),desc="Calculating explained variance"):
+        tab = compare_pca_models(ds, n_components=comp, batch_size=ds.shape[1])
+        new_row = [
+            comp,
+            np.sum(tab.iloc[0]["Explained Variance"]), tab.iloc[0]["Reconstruction Error"],
+            np.sum(tab.iloc[1]["Explained Variance"]), tab.iloc[1]["Reconstruction Error"],
+            np.sum(tab.iloc[2]["Explained Variance"]), tab.iloc[2]["Reconstruction Error"],
+        ]
+
+        results.append(new_row)
+
+    columns = [
+        "Components",
+        "cPCA Variability", "cPCA Reconstruction Error",
+        "PCA Variability", "PCA Reconstruction Error",
+        "iPCA Variability", "iPCA Reconstruction Error"
+    ]
+
+    # Create a DataFrame from the data
+    return pd.DataFrame(results, columns=columns)
+
+def plot_models(dataset):
+    x, _ = get_dataset(dataset)
+    ds = x.copy()
+    df = create_pca_matrix(ds)
+
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    ax1.plot(df['Components'], df['cPCA Variability'], label='cPCA Variability', color='blue', linestyle='-')
+    ax1.plot(df['Components'], df['PCA Variability'], label='PCA Variability', color='green', linestyle='-')
+    ax1.plot(df['Components'], df['iPCA Variability'], label='iPCA Variability', color='red', linestyle='-')
+
+    ax1.set_xlabel('Components')
+    ax1.set_ylabel('cPCA Variability, PCA Variability, iPCA Variability', color='black')
+    ax1.tick_params(axis='y', labelcolor='black')
+
+    ax2 = ax1.twinx()
+
+    ax2.plot(df['Components'], df['cPCA Reconstruction Error'], label='cPCA Reconstruction Error', color='orange',
+             linestyle='--')
+    ax2.plot(df['Components'], df['PCA Reconstruction Error'], label='PCA Reconstruction Error', color='purple',
+             linestyle='--')
+    ax2.plot(df['Components'], df['iPCA Reconstruction Error'], label='iPCA Reconstruction Error', color='brown',
+             linestyle='--')
+
+    ax2.set_ylabel('cPCA Reconstruction Error, PCA Reconstruction Error, iPCA Reconstruction Error', color='black')
+    ax2.tick_params(axis='y', labelcolor='black')
+
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper right')
+
+    plt.title('Explainability of each PCA method')
+    plt.grid(True)
+
+    plt.show()
+
 
 def compare_pca_models(X, n_components=3, batch_size=10):
     custompca_results = customPCA_analysis(X, n_components=n_components)
@@ -218,14 +278,19 @@ def kernel_pca_clustering(dataset, kernel='linear', n_components=2, max_clusters
       return dataset_kpca, labels_gkmeans, labels_optics
 def  main():
     while True:
+        function = get_user_choice("What do you want to do?", ["Compare PCA models explainability", "Visualize individual datasets using PCA"])
         dataset = get_user_choice("Which datset would you like to visualize?",["sick","vowel"])
-        algorithm = get_user_choice("Which algorithm would you like to use?",["custom PCA","sklearn.decomposition.PCA","sklearn.decomposition.IncrementalPCA"])
-        if algorithm == "custom PCA":
-            part_1(dataset)
-        elif algorithm == "sklearn.decomposition.PCA":
-            sklearn_PCA(dataset)
-        elif algorithm == "sklearn.decomposition.IncrementalPCA":
-            sklearn_incremental_PCA(dataset)
+
+        if function == "Visualize individual datasets using PCA":
+            algorithm = get_user_choice("Which algorithm would you like to use?",["custom PCA","sklearn.decomposition.PCA","sklearn.decomposition.IncrementalPCA"])
+            if algorithm == "custom PCA":
+                part_1(dataset)
+            elif algorithm == "sklearn.decomposition.PCA":
+                sklearn_PCA(dataset)
+            elif algorithm == "sklearn.decomposition.IncrementalPCA":
+                sklearn_incremental_PCA(dataset)
+        elif function == "Compare PCA models explainability":
+            plot_models(dataset)
         x = get_user_choice("Do you want to exit?", ["y", "n"])
         if x == "y":
             exit()
