@@ -10,9 +10,7 @@ from code.global_fastkmeans import run_global_kmeans
 from sklearn.decomposition import KernelPCA
 
 def pca_cluster(data, Y, component, method='G-Means', max_clusters_gkmeans=12, optics_metric='euclidean', optics_algorithm='auto'):
-    results = []
     ncol = data.shape[1]
-    print(ncol)
 
     # Apply PCA
     pca = customPCA()
@@ -32,14 +30,10 @@ def pca_cluster(data, Y, component, method='G-Means', max_clusters_gkmeans=12, o
     plt.grid(True)
     plt.show()
 
-
-
     reduced_data = pca.reduce_dim(data, n_components=component)
-
 
     if method == 'G-Means':
         start_time = time.time()
-        #clusters_gkmeans, labels_gkmeans = run_global_kmeans(reduced_data, max_clusters=max_clusters_gkmeans, distance= 'euclidean')
         clusters_gkmeans, labels_gkmeans = run_global_kmeans(reduced_data, max_clusters=max_clusters_gkmeans, distance= 'euclidean')
         end_time = time.time()
         g_time = end_time - start_time
@@ -49,11 +43,8 @@ def pca_cluster(data, Y, component, method='G-Means', max_clusters_gkmeans=12, o
         reconstruction_error = pca.reconstruction_error(data)
 
         results_means = get_metrics_general(reduced_data, Y, labels_gkmeans, method, g_time, n_iterations=None)
-        results_means['n_components'] = component
-        results_means['explained_variance'] = cumulative_explained_variance[component - 1]
-        results_means['reconstruction_error'] = reconstruction_error
-        results.append(results_means)
-        print(component)
+        results = results_means
+
 
 
     elif method == 'Optics':
@@ -67,22 +58,13 @@ def pca_cluster(data, Y, component, method='G-Means', max_clusters_gkmeans=12, o
         reconstruction_error = pca.reconstruction_error(data)
 
         results_optics = get_metrics_general(reduced_data, Y, optics_labels, method, o_time, n_iterations=None)
-        results_optics['n_components'] = component
-        results_optics['explained_variance'] = cumulative_explained_variance[component - 1]
-        results_optics['reconstruction_error'] = reconstruction_error
-        results.append(results_optics)
+        results = results_optics
 
-    results_df = pd.DataFrame(results)
-
-    columns = ['n_components'] + ['explained_variance'] + ['reconstruction_error'] + [col for col in results_df.columns if col not in ['n_components', 'explained_variance', 'reconstruction_error']]
-    results_df = results_df[columns]
-
-
-    return results_df
+    return results
 
 
 def kernel_cluster(data, Y, component,  method='G-Means', max_clusters_gkmeans=12, optics_metric='euclidean', optics_algorithm='auto'):
-    results = []
+
     ncol = data.shape[1]
     # Initialize KernelPCA
     kpca = KernelPCA(kernel='rbf', n_components=(ncol), fit_inverse_transform=True)
@@ -124,11 +106,7 @@ def kernel_cluster(data, Y, component,  method='G-Means', max_clusters_gkmeans=1
         reconstruction_error = np.nan
 
         results_means = get_metrics_general(reduced_data, Y, labels_gkmeans, method, g_time, n_iterations=None)
-        results_means['n_components'] = component
-        results_means['explained_variance'] = cumulative_explained_variance[component - 1]
-        results_means['reconstruction_error'] = reconstruction_error
-        results.append(results_means)
-        print(component)
+        results = results_means
 
     elif method == 'Optics':
         start_time = time.time()
@@ -140,14 +118,6 @@ def kernel_cluster(data, Y, component,  method='G-Means', max_clusters_gkmeans=1
         reconstruction_error = np.nan
 
         results_optics = get_metrics_general(reduced_data, Y, optics_labels, method, o_time, n_iterations=None)
-        results_optics['n_components'] = component
-        results_optics['explained_variance'] = cumulative_explained_variance[component - 1]
-        results_optics['reconstruction_error'] = reconstruction_error
-        results.append(results_optics)
+        results = results_optics
 
-    # Create a DataFrame with results
-    results_df = pd.DataFrame(results)
-    columns = ['n_components', 'explained_variance', 'reconstruction_error'] + [col for col in results_df.columns if col not in ['n_components', 'explained_variance', 'reconstruction_error']]
-    results_df = results_df[columns]
-
-    return results_df
+    return results

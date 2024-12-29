@@ -301,10 +301,15 @@ def  main():
             method = get_user_choice("Which clustering method would you like to use?",["G-Means","Optics"])
 
             if technique == "PCA":
-                pca_cluster(x, y, component= n_components, method=method, max_clusters_gkmeans=12,  optics_metric='manhattan', optics_algorithm='kd_tree')
+                metrics = pca_cluster(x, y, component= n_components, method=method, max_clusters_gkmeans=12,  optics_metric='manhattan', optics_algorithm='kd_tree')
             elif technique == "Kernel PCA":
-                kernel_cluster(x, y, component= n_components, method=method, max_clusters_gkmeans=12, optics_metric='minkowski',
+                metrics= kernel_cluster(x, y, component= n_components, method=method, max_clusters_gkmeans=12, optics_metric='minkowski',
                                optics_algorithm='ball_tree')
+            print("---------------------------------------------------------------------------------------")
+            print("Metrics Summary: ")
+            for key, value in metrics.items():
+                print(f"{key}: {value}")
+            print("---------------------------------------------------------------------------------------")
 
         x = get_user_choice("Do you want to exit?", ["y", "n"])
         if x == "y":
