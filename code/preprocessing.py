@@ -17,7 +17,7 @@ def preprocess_sick():
     :return: dataframe
     """
     # Load arff file
-    df_sick, meta_train = loadarff(f'datasets/sick.arff')
+    df_sick, meta_train = loadarff(f'../datasets/sick.arff')
 
     # Define datasets
     df_sick = pd.DataFrame(df_sick)
@@ -46,7 +46,7 @@ def preprocess_sick():
 
     df_sick = df_sick[[col for col in df_sick if col != 'sick'] + ['sick']]
 
-    df_sick.to_csv(f'datasets_processed/sick.csv', index=False)
+    df_sick.to_csv(f'../datasets_processed/sick.csv', index=False)
 
     return df_sick.iloc[:,:-1], df_sick.iloc[:,-1]
 
@@ -56,7 +56,7 @@ def preprocess_vowel():
     :return: dataframe
     """
     # Load arff file
-    df_vowel, meta_train = loadarff(f'datasets/vowel.arff')
+    df_vowel, meta_train = loadarff(f'../datasets/vowel.arff')
 
     # Define datasets
     df_vowel = pd.DataFrame(df_vowel)
@@ -71,7 +71,7 @@ def preprocess_vowel():
 
     df_vowel = pd.concat([df_vowel, y], axis=1)
 
-    df_vowel.to_csv(f'datasets_processed/vowel.csv', index=False)
+    df_vowel.to_csv(f'../datasets_processed/vowel.csv', index=False)
 
     return df_vowel.iloc[:,:-1], df_vowel.iloc[:,-1]
 
