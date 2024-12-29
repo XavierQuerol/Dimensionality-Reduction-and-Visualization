@@ -1,10 +1,10 @@
 
 
 import numpy as np
-from code.kmeans import CustomKMeans
-from code.utils import compute_final_clusters
+from kmeans import CustomKMeans
+from utils import compute_final_clusters
 import pandas as pd
-from code.metrics import get_metrics
+from metrics import get_metrics
 
 class GlobalKMeans:
     def __init__(self, max_clusters, distance):

@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from code.preprocessing import get_dataset
-from code.pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
-from code.pca import customPCA
-from code.global_kmeans import run_global_kmeans
-from code.utils import get_user_choice
+from preprocessing import get_dataset
+from pca_analysis import pca_analysis, customPCA_analysis, incremental_pca_analysis
+from pca import customPCA
+from global_kmeans import run_global_kmeans
+from utils import get_user_choice
 
 from sklearn import decomposition
 from tqdm import tqdm
@@ -59,7 +59,7 @@ def plot_models(dataset):
     ax1.plot(df['Components'], df['iPCA Variability'], label='iPCA Variability', color='red', linestyle='-')
 
     ax1.set_xlabel('Components')
-    ax1.set_ylabel('cPCA Variability, PCA Variability, iPCA Variability', color='black')
+    ax1.set_ylabel('Variability', color='black')
     ax1.tick_params(axis='y', labelcolor='black')
 
     ax2 = ax1.twinx()
@@ -71,7 +71,7 @@ def plot_models(dataset):
     ax2.plot(df['Components'], df['iPCA Reconstruction Error'], label='iPCA Reconstruction Error', color='brown',
              linestyle='--')
 
-    ax2.set_ylabel('cPCA Reconstruction Error, PCA Reconstruction Error, iPCA Reconstruction Error', color='black')
+    ax2.set_ylabel('Reconstruction Error', color='black')
     ax2.tick_params(axis='y', labelcolor='black')
 
     ax1.legend(loc='upper left')
