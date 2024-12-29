@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA, IncrementalPCA
-from code.pca import customPCA
+from pca import customPCA
 from sklearn.metrics import mean_squared_error
 import time
 import os

@@ -103,7 +103,7 @@ def plot_metrics():
 
     metrics = ["Explained variance", "Davies-Bouldin Index", "Silhouette Coefficient", "Calinski"]
     sns.set(style="whitegrid", palette="muted", font_scale=1.2)
-    fig, axes = plt.subplots(2, 4, figsize=(12, 8), sharex=True)
+    fig, axes = plt.subplots(2, 4, figsize=(12, 8), sharex=False)
     for red_method, marker, color_m in zip(['KERNEL', 'PCA'], ['o', '.'], ['red', 'orange']):
         
         for row_idx, dataset in enumerate(['vowel', 'sick']):
@@ -124,7 +124,11 @@ def plot_metrics():
 
                     if metric != 'Explained variance' and red_method=='KERNEL':
                         #ax.scatter(np.array(df['n_components'].max()), np.array(hardcoded_results[cl_method][dataset][metric]), color='black', marker=cl_marker, label=f'Original + {cl_method}', alpha=0.7)
-                        ax.hlines(y=np.array(hardcoded_results[cl_method][dataset][metric]), xmin=0, xmax=np.array(df['n_components'].max()), color='black', linestyle='-', label=f'Original + {cl_method}', alpha=0.5)
+                        if cl_method == 'means':
+                            linestyle = '-'
+                        else:
+                            linestyle = 'dashed'
+                        ax.hlines(y=np.array(hardcoded_results[cl_method][dataset][metric]), xmin=0, xmax=np.array(df['n_components'].max()), color='black', linestyle=linestyle, label=f'Original + {cl_method}', alpha=0.5)
 
                     
                     ax.scatter(df['n_components'], df[metric], color=color_m, marker=cl_marker, label=label, alpha=0.7)
@@ -168,4 +172,4 @@ def plot_metrics():
     plt.tight_layout()
     plt.show()
 
-plot_reductions()
+plot_metrics()
